@@ -43,6 +43,8 @@ static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static int g_backlight = 255;
 static int g_buttons = 0;
+static int g_caps = 0;
+static int g_func = 0;
 struct led_prop {
     const char *filename;
     int fd;
@@ -59,6 +61,8 @@ struct led {
 enum {
     JOGBALL_LED,
     BUTTONS_LED,
+    CAPS_LED,
+    FUNC_LED,
     AMBER_LED,
     GREEN_LED,
     BLUE_LED,
@@ -76,6 +80,12 @@ struct led leds[NUM_LEDS] = {
     },
     [BUTTONS_LED] = {
         .brightness = { "/sys/class/leds/button-backlight/brightness", 0},
+    },
+    [CAPS_LED] = {
+	    .brightness = { "/sys/class/leds/caps/brightness", 0},
+`   },
+    [FUNC_LED] = {
+	    .brightness = { "/sys/class/leds/func/brightness", 0},
     },
     [RED_LED] = {
         .brightness = { "/sys/class/leds/red/brightness", 0},
@@ -363,6 +373,32 @@ set_light_buttons(struct light_device_t* dev,
 }
 
 static int
+set_light_caps(struct light_device_t* dev,
+	struct light_state_t const* state)
+{
+	int err = 0;
+	int on = is_lit(state);
+	pthread_mutex_lock(&g_lock);
+	g_caps = on;
+	err = write_int(&leds[CAPS_LED].brightness, state->color&0xff);
+	pthread_mutex_unlock(&g_lock);
+	return err;
+}
+
+static int
+set_light_func(struct light_device_t* dev,
+	struct light_state_t const* state)
+{
+	int err = 0;
+	int on = is_lit(state);
+	pthread_mutex_lock(&g_lock);
+	g_func = on;
+	err = write_int(&leds[FUNC_LED].brightness, state->color&0xff);
+	pthread_mutex_unlock(&g_lock);
+	return err;
+}
+
+static int
 set_speaker_light_locked(struct light_device_t* dev,
         struct light_state_t const* state)
 {
@@ -625,6 +661,12 @@ static int open_lights(const struct hw_module_t* module, char const* name,
     }
     else if (0 == strcmp(LIGHT_ID_ATTENTION, name)) {
         set_light = set_light_attention;
+    }
+    else if (0 == strcmp(LIGHT_ID_CAPS, name)) {
+        set_light = set_light_caps;
+    }
+    else if (0 == strcmp(LIGHT_ID_FUNC, name)) {
+        set_light = set_light_func;
     }
     else {
         return -EINVAL;
