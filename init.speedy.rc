@@ -36,6 +36,9 @@ on fs
     # bluetooth car dock pin
     chown system system /sys/class/switch/dock/bt_pin
 
+    # 7630 target supports Warmboot capability
+    setprop ro.warmboot.capability 1
+
     # Permissions for Liblights.
     chown system system /sys/class/leds/green/brightness
     chown system system /sys/class/leds/green/blink
@@ -191,4 +194,3 @@ service getWMXPropd /system/bin/getWiMAXPropDaemond
     user root
     group root
     oneshot
-
