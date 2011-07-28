@@ -16,7 +16,7 @@ gsm.operator.iso-country = us
 #Modify MTU from 1500 to 1472 on 3G network
 ro.ril.set.mtu1472 = 1
 
-net.tcp.buffersize.wimax = 4096,221184,524288,4096,16384,110208
+net.tcp.buffersize.wimax = 4096,524288,1048576,4096,16384,110208
 
 wifi.interface = eth0
 wifi.supplicant_scan_interval=15
