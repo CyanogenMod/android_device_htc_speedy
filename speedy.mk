@@ -105,7 +105,8 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     device/htc/speedy/modules/bcm4329.ko:system/lib/modules/bcm4329.ko \
-    device/htc/speedy/modules/sequans_sdio.ko:system/lib/modules/sequans_sdio.ko 
+    device/htc/speedy/modules/sequans_sdio.ko:system/lib/modules/sequans_sdio.ko \
+    device/htc/speedy/modules/wimax.ko:system/lib/modules/wimax.ko
 
 PRODUCT_COPY_FILES += \
     device/htc/speedy/prebuilt/libcryp98.so:system/lib/libcryp98.so
